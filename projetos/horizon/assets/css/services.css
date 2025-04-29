@@ -140,7 +140,7 @@
         font-size: .7rem;
 }
 
-@media (max-width: 1200px) {
+@media screen and (max-width: 1200px) {
 
         .services-card-wrapper {
                 grid-template-columns: 350px 350px;
@@ -148,7 +148,7 @@
         }
 }
 
-@media (max-width: 7680px) {
+@media screen and (max-width: 768px) {
         .services-card-wrapper {
                 grid-template-columns: 350px;
 

@@ -11,45 +11,33 @@
                                         recentes</span>
                         </h2>
                 </div>
-                <div class="slide-container border-radius" data-slide='slide-container'
-                        data-type="single" data-slide-loop >
-                        <div class="slide-display" data-slide='slide-display'>
-                                <div class="slide-item " data-slide="slide-item">
-                                        <div class="services-card-wrapper">
-                                                <?php
-                                                include 'services-card.php';
-                                                ?>
-                                                <?php
-                                                include 'services-card.php';
-                                                ?>
-                                                <?php
-                                                include 'services-card.php';
-                                                ?>
-                                                <?php
-                                                include 'services-card.php';
-                                                ?>
-                                                <?php
-                                                include 'services-card.php';
-                                                ?>
-                                                <?php
-                                                include 'services-card.php';
-                                                ?>
-                                        </div>
+                <div class="slide-container border-radius">
+                        <div class="slide-item ">
+                                <div class="services-card-wrapper">
+                                        <?php
+                                        include 'services-card.php';
+                                        ?>
+                                        <?php
+                                        include 'services-card.php';
+                                        ?>
+                                        <?php
+                                        include 'services-card.php';
+                                        ?>
+                                        <?php
+                                        include 'services-card.php';
+                                        ?>
+                                        <?php
+                                        include 'services-card.php';
+                                        ?>
+                                        <?php
+                                        include 'services-card.php';
+                                        ?>
                                 </div>
-                                <div class="slide-controls" data-slide='slide-controls'>
-                                        <img class="slide-control slide-control-prev"
-                                                data-slide='slide-control-prev'
-                                                src="assets/icons/prev.webp" alt="prev button">
-                                        <img class="slide-control slide-control-next"
-                                                data-slide='slide-control-next'
-                                                src="assets/icons/next.webp" alt="next button">
-                                </div>
-
                         </div>
-
                 </div>
-                <button class="btn works-btn ">
-                        <span class="en">Explore Now</span>
-                        <span class="pt">Explore Agora</span>
-                </button>
+        </div>
+        <button class="btn works-btn ">
+                <span class="en">Explore Now</span>
+                <span class="pt">Explore Agora</span>
+        </button>
 </section>

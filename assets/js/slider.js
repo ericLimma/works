@@ -12,6 +12,9 @@ class Slider {
                 this.savedPosition = 0;
                 this.isTransitioning = false; // Novo: controle de transição
                 this.deslocamento = false
+                this.isDragging = false;
+                this.startX = 0;
+                this.initialPosition = 0;
 
                 this.adjustLayout();
                 window.addEventListener('resize', () => this.adjustLayout());
@@ -126,28 +129,34 @@ class Slider {
                 clearInterval(this.autoPlayInterval)
         }
         setupTrackDrag() {
-                // Configura eventos de arraste diretamente na track
+                // Configura eventos de arraste
                 this.slideTrack.style.cursor = 'grab';
 
-                // Eventos de mouse
-                this.slideTrack.addEventListener('mousedown', this.onDragStart.bind(this));
-                document.addEventListener('mousemove', this.onDragMove.bind(this));
-                document.addEventListener('mouseup', this.onDragEnd.bind(this));
-
-                // Eventos touch
-                this.slideTrack.addEventListener('touchstart', (e) => {
+                // Armazene as funções bindadas para poder remover depois
+                this.handleMouseDown = this.onDragStart.bind(this);
+                this.handleMouseMove = this.onDragMove.bind(this);
+                this.handleMouseUp = this.onDragEnd.bind(this);
+                this.handleTouchStart = (e) => {
                         e.preventDefault();
                         this.onDragStart(e.touches[0]);
-                }, { passive: false });
-
-                document.addEventListener('touchmove', (e) => {
+                };
+                this.handleTouchMove = (e) => {
                         if (this.isDragging) {
                                 e.preventDefault();
                                 this.onDragMove(e.touches[0]);
                         }
-                }, { passive: false });
+                };
+                this.handleTouchEnd = this.onDragEnd.bind(this);
 
-                document.addEventListener('touchend', this.onDragEnd.bind(this));
+                // Mouse events
+                this.slideTrack.addEventListener('mousedown', this.handleMouseDown);
+                document.addEventListener('mousemove', this.handleMouseMove);
+                document.addEventListener('mouseup', this.handleMouseUp);
+
+                // Touch events
+                this.slideTrack.addEventListener('touchstart', this.handleTouchStart, { passive: false });
+                document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+                document.addEventListener('touchend', this.handleTouchEnd);
 
                 // Pausa autoplay durante interação
                 this.slideTrack.addEventListener('mouseenter', () => this.pauseAutoPlay());
@@ -155,6 +164,7 @@ class Slider {
                         if (!this.isDragging) this.activeAutoPlay();
                 });
         }
+
         onDragStart(event) {
                 this.isDragging = true;
                 this.startX = event.clientX;
@@ -167,7 +177,7 @@ class Slider {
         onDragMove(event) {
                 if (!this.isDragging) return;
 
-                const currentX = event.clientX || event.touches[0].clientX;
+                const currentX = event.clientX;
                 const deltaX = currentX - this.startX;
                 const newPosition = this.initialPosition + deltaX;
 
@@ -185,11 +195,25 @@ class Slider {
                 const itemWidth = this.slideTrack.querySelector('[data-slide="slide-item"]').clientWidth;
                 const gap = this.slideTrackGap;
                 const totalWidth = itemWidth + gap;
-                const newIndex = Math.round(Math.abs(this.savedPosition) / totalWidth);
 
-                this.currentIndex = Math.max(0, Math.min(newIndex, this.slideList.length - this.slideColumns));
+                // Calcula a velocidade do gesto para determinar se deve mudar de slide
+                const velocity = (this.savedPosition - this.initialPosition) / (Date.now() - this.dragStartTime);
+
+                // Se a velocidade for alta o suficiente, muda de slide
+                if (Math.abs(velocity) > 0.1) {
+                        this.currentIndex += velocity > 0 ? -1 : 1;
+                } else {
+                        // Caso contrário, vai para o slide mais próximo
+                        this.currentIndex = Math.round(Math.abs(this.savedPosition) / totalWidth);
+                }
+
+                // Limita o índice aos limites válidos
+                this.currentIndex = Math.max(0, Math.min(this.currentIndex, this.slideList.length - this.slideColumns));
+
+                // Atualiza a posição
                 this.translateTrack();
         }
+
         activeDots() {
                 const dotsContainer = document.createElement('div');
                 dotsContainer.classList.add('slide-dots-container');

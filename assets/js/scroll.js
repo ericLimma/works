@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         behavior: 'smooth',
                                         block: 'center', // Centraliza a seção
                                 });
-                        }
+    /*  */                    }
                 }
 
                 document.addEventListener('wheel', (event) => {
